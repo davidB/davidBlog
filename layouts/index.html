@@ -1,0 +1,22 @@
+{{ $baseurl := .Site.BaseUrl }}
+{{ template "chrome/header.html" . }}
+
+<section id="main">
+	<h1>davidB'log</h1>
+	<p>Welcome to the website of David Bernard (alias davidB, dwayneb), with my opinions (mostly about IT) and practices, tips, projects summary ...</p>
+	<p>The site is :
+		<ul>
+			<li>in re-born phase after several years of clinical death</li>
+			<li>mostly in pseudo-english/globish (sorry for syntax error, feel free to report them)</li>
+		</ul>
+	</p>
+	<p>See <a href="/categories/articles/index.html">articles</a> to have the list of articles (the blog sections).</p>
+	<p>See <a href="/misc/about/index.html">about</a> to have the list of tools, libs,... used to create it.</p>
+	<div id='taglist'>
+		{{ range .Site.Indexes.Tags}}
+		<a href="{{ $baseurl }}/tags/{{ . | urlize }}">{{ . }}</a>
+		{{ end }}
+	</div>
+</section>
+
+{{ template "chrome/footer.html" }}

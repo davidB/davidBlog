@@ -1,0 +1,270 @@
+# Don't show directory listings for URLs which map to a directory.
+#Options -Indexes
+
+# Follow symbolic links in this directory.
+#Options +FollowSymLinks
+
+# Unset ETags
+#Header unset ETag
+#FileETag None
+
+# Compress text files.
+# <IfModule mod_deflate.c>
+# SetOutputFilter DEFLATE
+# # compress content with type html, text, js, and css
+# AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/x-javascript
+# <IfModule mod_headers.c>
+# # properly handle requests coming from behind proxies
+# Header append Vary User-Agent
+# </IfModule>
+# # Properly handle old browsers that do not support compression
+# BrowserMatch ^Mozilla/4 gzip-only-text/html
+# BrowserMatch ^Mozilla/4\.0[678] no-gzip
+# BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+# # Explicitly exclude binary files from compression just in case
+# SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|pdf|swf|ico|zip)$ no-gzip
+# </IfModule>
+
+# Custom errors
+ErrorDocument 404 /errors/404.html
+#ErrorDocument 403 /errors/403.html
+#ErrorDocument 500 /errors/500.html
+
+# Set the default handler.
+# DirectoryIndex index.html # failed on xxxx.free.fr
+
+# # Requires mod_expires to be enabled.
+# <IfModule mod_expires.c>
+# # Enable expirations.
+# ExpiresActive On
+# 
+# #ExpiresDefault A14400
+# #ExpiresByType application/javascript A2592000
+# #ExpiresByType application/x-javascript A2592000
+# #ExpiresByType text/javascript A2592000
+# #ExpiresByType text/html A3600
+# #ExpiresByType text/xml A3600
+# #ExpiresByType text/css A2592000
+# #ExpiresByType text/plain A2592000
+# ExpiresByType image/gif A2592000
+# ExpiresByType image/jpg A2592000
+# ExpiresByType image/jpeg A2592000
+# ExpiresByType image/png A2592000
+# ExpiresByType image/bmp A2592000
+# ExpiresByType application/x-shockwave-flash A2592000
+# </IfModule>
+                 
+# Rewrite rules.
+
+Redirect Permanent /blog/rss.php http://feeds.feedburner.com/davidB_log
+Redirect Permanent /blog/atom.php http://feeds.feedburner.com/davidB_log
+#<IfModule mod_rewrite.c>
+#RewriteEngine on
+#RewriteRule ^$ /home/index.html [L]
+#RewriteRule ^(rss|atom)/?$ /$1.xml [L]
+#RewriteRule ^/blog/rss.php$ http://feeds.feedburner.com/davidB_log
+#RewriteRule ^/blog/atom.php$ http://feeds.feedburner.com/davidB_log
+##RewriteRule ^tags/([^/\.]+)/(rss|atom)/?$ /tags/$1/$2.xml [L]
+#
+#RewriteRule /blog/index.php/2006/06/15/2-use-compact-syntax /posts/use_compact_syntax/
+#RewriteRule /blog/index.php/2006/06/19/3-testng-gui-01 /posts/testng-gui_01/
+#RewriteRule /blog/index.php/2006/09/19/4-why-i-don-t-continue-to-use-getter-and-setter /posts/why_i_don_t_continue_to_use_getter_and_setter/
+#RewriteRule /blog/index.php/2006/12/01/5-avantages-de-maven-sur-ant-les-conventions /posts/avantages_de_maven_sur_ant_les_conventions/
+#RewriteRule /blog/index.php/2006/12/01/6-avantages-de-maven-sur-ant-les-librairies /posts/avantages_de_maven_sur_ant_les_librairies/
+#RewriteRule /blog/index.php/2006/12/01/7-les-drm-nous-avons-ete-trop-gentil-avec-les-mechants /posts/les_drm_nous_avons_ete_trop_gentil_avec_les_mechants/
+#RewriteRule /blog/index.php/2006/12/01/8-tips-inclure-un-jar-dans-un-projet-maven /posts/tips_inclure_un_jar_dans_un_projet_maven/
+#RewriteRule /blog/index.php/2006/12/01/9-tips-rechercher-un-jar /posts/tips-rechercher-un-jar/
+#RewriteRule /blog/index.php/2006/12/07/10-url-info-maven-2 /posts/url-info-maven-2/
+#RewriteRule /blog/index.php/2006/12/07/11-url-repositories-maven2 /posts/url_repositories_maven2/
+#RewriteRule /blog/index.php/2007/08/30/12-displaycover /posts/displaycover/
+#RewriteRule ^(blog|entries)/([^/\.]+)/?$ /posts/$2/ [L,R=301]
+#RewriteRule /blog/ /articles/
+#RewriteRule ^(articles|blog|entries|tags)/?$ /archives/ [L,R=301]
+#</IfModule>
+# 
+# RedirectMatch permanent /blog/index.php/gallery/babies.* http://dwayneb.free.fr/albums/babies
+
+#<LocationMatch "babies">
+#  AuthName "Veuillez vous identifier"
+#  AuthType Basic
+#  PerlSetVar AuthFile .secret/.htpasswd
+#  #AuthUserFile /mnt/108/sdb/b/f/dwayneb/.secret/.htpasswd
+#  Require user ryowen
+#</LocationMatch>
+
+# This configuration fragment allows you to use the file-type icons with
+# Apache's "autoindex" feature.  You will need to adjust the directory
+# paths to suit your configuration.
+
+# # Use fancy indexing with icons of size 32x32
+# IndexOptions FancyIndexing +FoldersFirst +NameWidth=*
+# IndexOptions +IconWidth=32 +IconHeight=32 +IconsAreLinks
+# IndexOptions -SuppressLastModified +SuppressDescription
+# 
+# IndexOrderDefault Ascending Name
+# IndexIgnore .htaccess Thumbs.db
+# 
+# HeaderName /.indexoverride/HEADER.html
+# ReadmeName /.indexoverride/FOOTER.html
+# 
+# # Associate filename extensions with icons
+# AddIcon /.indexoverride/mimetypes/application-msword.png .doc .dot
+# AddIcon /.indexoverride/mimetypes/application-ogg.png .ogg
+# AddIcon /.indexoverride/mimetypes/application-pdf.png .pdf
+# AddIcon /.indexoverride/mimetypes/application-postscript.png .ai .eps .ps
+# AddIcon /.indexoverride/mimetypes/application-qif.png .qif
+# AddIcon /.indexoverride/mimetypes/application-rtf.png .rtf
+# AddIcon /.indexoverride/mimetypes/application-vnd.ms-excel.png .xlb .xls .xlt .xlw
+# AddIcon /.indexoverride/mimetypes/application-vnd.ms-powerpoint.png .pot .pps .ppt
+# AddIcon /.indexoverride/mimetypes/application-vnd.stardivision.writer.png .sxw
+# AddIcon /.indexoverride/mimetypes/application-x-arj.png .arj
+# AddIcon /.indexoverride/mimetypes/application-x-cpio-compressed.png .bcpio
+# AddIcon /.indexoverride/mimetypes/application-x-cpio.png .cpio
+# AddIcon /.indexoverride/mimetypes/application-x-backup.png *~ .bak
+# AddIcon /.indexoverride/mimetypes/application-x-bittorent.png .torrent
+# AddIcon /.indexoverride/mimetypes/application-x-bzip-compressed-tar.png .tbz .tbz2 .tar.bz .tar.bz2 .tar.bzip
+# AddIcon /.indexoverride/mimetypes/application-x-bzip.png .bz .bz2 .bzip
+# AddIcon /.indexoverride/mimetypes/application-x-cd-image.png .iso
+# AddIcon /.indexoverride/mimetypes/application-x-compress.png .z .Z
+# AddIcon /.indexoverride/mimetypes/application-x-compressed-tar.png .tar
+# AddIcon /.indexoverride/mimetypes/application-x-core-file.png core CORE
+# AddIcon /.indexoverride/mimetypes/application-x-deb.png .deb
+# AddIcon /.indexoverride/mimetypes/application-x-dvi.png .dvi
+# AddIcon /.indexoverride/mimetypes/application-x-font-afm.png .afm
+# AddIcon /.indexoverride/mimetypes/application-x-font-bdf.png .bdf
+# AddIcon /.indexoverride/mimetypes/application-x-font-linux-psf.png .psf
+# AddIcon /.indexoverride/mimetypes/application-x-font-pcf.png .pcf
+# AddIcon /.indexoverride/mimetypes/application-x-font-ttf.png .ttf
+# AddIcon /.indexoverride/mimetypes/application-x-gnumeric.png .gnumeric
+# AddIcon /.indexoverride/mimetypes/application-x-gzip.png .gz .gzip .tar.gz .tgz
+# AddIcon /.indexoverride/mimetypes/application-x-jar.png .jar
+# AddIcon /.indexoverride/mimetypes/application-x-java-byte-code.png .class
+# AddIcon /.indexoverride/mimetypes/application-x-lha.png .lha
+# AddIcon /.indexoverride/mimetypes/application-x-lhz.png .lhz
+# AddIcon /.indexoverride/mimetypes/application-x-object-file.png .o
+# AddIcon /.indexoverride/mimetypes/application-x-ogg.png .ogg
+# AddIcon /.indexoverride/mimetypes/application-x-perl.png .pl
+# AddIcon /.indexoverride/mimetypes/application-x-php.png .php .php3 .php3p .php4 .php5 .pht .phtml
+# AddIcon /.indexoverride/mimetypes/application-x-phyton.png .py
+# AddIcon /.indexoverride/mimetypes/application-x-python-bytecode.png .pyc
+# AddIcon /.indexoverride/mimetypes/application-x-rar.png .rar
+# AddIcon /.indexoverride/mimetypes/application-x-rpm.png .rpm
+# AddIcon /.indexoverride/mimetypes/application-x-sharedlib.png .so .dll
+# AddIcon /.indexoverride/mimetypes/application-x-shellscript.png .bsh .ksh .sh
+# AddIcon /.indexoverride/mimetypes/application-x-shockwave-flash.png .swf
+# AddIcon /.indexoverride/mimetypes/application-x-stuffit.png .sit
+# AddIcon /.indexoverride/mimetypes/application-zip.png .zip
+# AddIcon /.indexoverride/mimetypes/audio-ac3.png .ac3
+# AddIcon /.indexoverride/mimetypes/audio-aiff.png .aif .aifc .aiff
+# AddIcon /.indexoverride/mimetypes/audio-basic.png .au .snd
+# AddIcon /.indexoverride/mimetypes/audio-midi.png .mid .midi
+# AddIcon /.indexoverride/mimetypes/audio-x-mp3.png .mp3
+# AddIcon /.indexoverride/mimetypes/audio-x-pn-realaudio.png .real
+# AddIcon /.indexoverride/mimetypes/audio-x-wav.png .wav
+# AddIcon /.indexoverride/mimetypes/audio-x-xxm.png .xxm
+# AddIcon /.indexoverride/mimetypes/image-bmp.png .bmp
+# AddIcon /.indexoverride/mimetypes/image-jpeg.png .jpeg .jpg
+# AddIcon /.indexoverride/mimetypes/image-png.png .png
+# AddIcon /.indexoverride/mimetypes/image-svg.png .svg
+# AddIcon /.indexoverride/mimetypes/image-tiff.png .tif .tiff
+# AddIcon /.indexoverride/mimetypes/image-x-3ds.png .3ds
+# AddIcon /.indexoverride/mimetypes/image-x-cmu-raster.png .cmu
+# AddIcon /.indexoverride/mimetypes/image-x-portable-anymap.png .pnm
+# AddIcon /.indexoverride/mimetypes/image-x-portable-bitmap.png .pbm
+# AddIcon /.indexoverride/mimetypes/image-x-portable-graymap.png .pgm
+# AddIcon /.indexoverride/mimetypes/image-x-portable-pixmap.png .ppm
+# AddIcon /.indexoverride/mimetypes/image-x-psd.png image/x-psd .psd
+# AddIcon /.indexoverride/mimetypes/image-x-rgb.png image/x-rgb .rgb
+# AddIcon /.indexoverride/mimetypes/image-x-tga.png image/x-tga .tga
+# AddIcon /.indexoverride/mimetypes/image-x-xbitmap.png .xbm
+# AddIcon /.indexoverride/mimetypes/image-x-xcf.png .xcf
+# AddIcon /.indexoverride/mimetypes/image-x-xfig.png .xfig
+# AddIcon /.indexoverride/mimetypes/image-x-xpixmap.png .xpm
+# AddIcon /.indexoverride/mimetypes/text-css.png .css
+# AddIcon /.indexoverride/mimetypes/text-html.png .htm .html .shtml .xhtml
+# AddIcon /.indexoverride/mimetypes/text-x-authors.png authors authors.txt AUTHORS AUTHORS.txt
+# AddIcon /.indexoverride/mimetypes/text-x-c-header.png .h
+# AddIcon /.indexoverride/mimetypes/text-x-copying.png COPYING COPYING.txt
+# AddIcon /.indexoverride/mimetypes/text-x-c.png .c
+# AddIcon /.indexoverride/mimetypes/text-x-c++.png .c++ .cpp
+# AddIcon /.indexoverride/mimetypes/text-x-credits.png credits credits.txt CREDITS CREDITS.txt
+# AddIcon /.indexoverride/mimetypes/text-x-install.png install install.txt INSTALL INSTALL.txt
+# AddIcon /.indexoverride/mimetypes/text-x-lyx.png .lyx
+# AddIcon /.indexoverride/mimetypes/text-xml.png .xml .xsl
+# AddIcon /.indexoverride/mimetypes/text-x-readme.png readme readme.txt README README.txt
+# AddIcon /.indexoverride/mimetypes/text-x-troff-man.png .man
+# AddIcon /.indexoverride/mimetypes/video-mpeg.png .mpeg .mpg .mpe
+# AddIcon /.indexoverride/mimetypes/video-quicktime.png .qt .mov
+# AddIcon /.indexoverride/mimetypes/video-x-ms-asf.png .asf
+# AddIcon /.indexoverride/mimetypes/video-x-msvideo.png .avi
+# AddIcon /.indexoverride/mimetypes/x-ms-wmv.png .wmv
+
+#AddIcon /.indexoverride/mimetypes/application-pgp-encrypted.png application/pgp-encrypted
+#AddIcon /.indexoverride/mimetypes/application-pgp-keys.png application/pgp-keys
+#AddIcon /.indexoverride/mimetypes/application-pgp.png application/pgp
+#AddIcon /.indexoverride/mimetypes/application-rhythmbox-effect.png application/rhythmbox-effect
+#AddIcon /.indexoverride/mimetypes/application-rhythmbox-playlist.png application/rhythmbox-playlist
+#AddIcon /.indexoverride/mimetypes/application-vnd.lotus-1-2-3.png application/vnd.lotus-1-2-3
+#AddIcon /.indexoverride/mimetypes/application-vnd.n-realmedia.png application/vnd.n-realmedia
+#AddIcon /.indexoverride/mimetypes/application-vnd.sun.xml.calc.png application/vnd.sun.xml.calc
+#AddIcon /.indexoverride/mimetypes/application-vnd.sun.xml.stardivision.impress.png application/vnd.sun.xml.stardivision.impress
+#AddIcon /.indexoverride/mimetypes/application-vnd.sun.xml.writer.png application/vnd.sun.xml.writer
+#AddIcon /.indexoverride/mimetypes/application-x-abiword.png application/x-abiword
+#AddIcon /.indexoverride/mimetypes/application-x-applix-spreadsheet.png application/x-applix-spreadsheet
+#AddIcon /.indexoverride/mimetypes/application-x-applix-word.png application/x-applix-word
+#AddIcon /.indexoverride/mimetypes/application-x-archive.png application/x-archive
+#AddIcon /.indexoverride/mimetypes/application-x-blender.png application/x-blender
+#AddIcon /.indexoverride/mimetypes/application-x-core.png application/x-core
+#AddIcon /.indexoverride/mimetypes/application-x-dc-rom.png application/x-dc-rom
+#AddIcon /.indexoverride/mimetypes/application-x-desktop.png application/x-desktop
+#AddIcon /.indexoverride/mimetypes/application-x-diagram.png application/x-diagram
+#AddIcon /.indexoverride/mimetypes/application-x-e-theme.png application/x-e-theme
+#AddIcon /.indexoverride/mimetypes/application-x-executable.png application/x-executable
+#AddIcon /.indexoverride/mimetypes/application-x-font-sunos-news.png application/x-font-sunos-news
+#AddIcon /.indexoverride/mimetypes/application-x-gameboy-rom.png application/x-gameboy-rom
+#AddIcon /.indexoverride/mimetypes/application-x-genesis-rom.png application/x-genesis-rom
+#AddIcon /.indexoverride/mimetypes/application-x-glade.png application/x-glade
+#AddIcon /.indexoverride/mimetypes/application-x-gnome-app-info.png application/x-gnome-app-info
+#AddIcon /.indexoverride/mimetypes/application-x-gnucash.png application/x-gnucash
+#AddIcon /.indexoverride/mimetypes/application-x-gtkalog.png application/x-gtkalog
+#AddIcon /.indexoverride/mimetypes/application-x-class-file.png application/x-class-file
+#AddIcon /.indexoverride/mimetypes/application-x-kde-app-info.png application/x-kde-app-info
+#AddIcon /.indexoverride/mimetypes/application-x-killustrator.png application/x-killustrator
+#AddIcon /.indexoverride/mimetypes/application-x-kpreseter.png application/x-kpreseter
+#AddIcon /.indexoverride/mimetypes/application-x-kspread.png application/x-kspread
+#AddIcon /.indexoverride/mimetypes/application-x-kword.png application/x-kword
+#AddIcon /.indexoverride/mimetypes/application-x-mrproject.png application/x-mrproject
+#AddIcon /.indexoverride/mimetypes/application-x-qw.png application/x-qw
+#AddIcon /.indexoverride/mimetypes/application-x-theme.png application/x-theme
+#AddIcon /.indexoverride/mimetypes/application-x-trash.png application/x-trash
+#AddIcon /.indexoverride/mimetypes/image-x-applix-graphic.png image/x-applix-graphic
+#AddIcon /.indexoverride/mimetypes/image-x-lwo.png image/x-lwo
+#AddIcon /.indexoverride/mimetypes/image-x-lws.png image/x-lws
+#AddIcon /.indexoverride/mimetypes/text-x-chdr.png text/x-chdr
+#AddIcon /.indexoverride/mimetypes/text-x-c++src.png text/x-c++src
+#AddIcon /.indexoverride/mimetypes/text-x-sh.png .sh
+#AddIcon /.indexoverride/mimetypes/image-x-xwindowdump.png .man
+
+# AddIcon (PAR,/.indexoverride/actions/up.png) ..
+# AddIcon (DIR,/.indexoverride/filesystems/directory.png) ^^DIRECTORY^^
+# 
+# # Associate file types with icons (for Apache 2.0)
+# AddIconByType (APP,/.indexoverride/mimetypes/application.png) application/*
+# AddIconByType (SND,/.indexoverride/mimetypes/audio.png) audio/*
+# AddIconByType (CMP,/.indexoverride/mimetypes/compressed.png) compressed/*
+# AddIconByType (IMG,/.indexoverride/mimetypes/image.png) image/*
+# AddIconByType (TXT,/.indexoverride/mimetypes/text.png) text/* message/*
+# AddIconByType (VID,/.indexoverride/mimetypes/video.png) video/*
+
+
+# Associate encoding with icon (for Apache 2.0)
+#AddIconByEncoding /.indexoverride/mimetypes/compressed.png     x-compress x-gzip
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-nfs-server.png x-directory-nfs-server
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-smb-server.png x-directory-smb-server
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-smb-share.png x-directory-smb-share
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-smb-workgroup.png x-directory-smb-workgroup
+
+# Default icon for otherwise-unassociated filetypes
+# DefaultIcon /.indexoverride/filesystems/default.png
+
+AddType text/cache-manifest .appcache
