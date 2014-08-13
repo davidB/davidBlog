@@ -20,12 +20,6 @@ categories: ["pages"]
   * [SublimeText](http://www.sublimetext.com/)
 * [ArchLinux](http://distrowatch.com/table.php?distribution=arch)
 
-
-An helpfull info about using nanoc to create this site :
-
-* [H3RALD](http://www.h3rald.com/)
-* [nanoc3 Blog Starter Kit](https://github.com/mgutz/nanoc3_blog)
-
 ## Licensing
 
 Except where otherwise noted, content on this site is licensed under :

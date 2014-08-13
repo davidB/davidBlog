@@ -1,5 +1,5 @@
 {{ $baseurl := .Site.BaseUrl }}
-{{ template "chrome/header.html" . }}
+{{ template "theme/partials/header.html" . }}
 
 <section id="main">
 	<h1>davidB'log</h1>
@@ -11,7 +11,7 @@
 		</ul>
 	</p>
 	<p>See <a href="/categories/articles/index.html">articles</a> to have the list of articles (the blog sections).</p>
-	<p>See <a href="/misc/about/index.html">about</a> to have the list of tools, libs,... used to create it.</p>
+	<p>See <a href="/about/index.html">about</a> to have the list of tools, libs,... used to create this site.</p>
 	<div id='taglist'>
 		{{ range .Site.Indexes.Tags}}
 		<a href="{{ $baseurl }}/tags/{{ . | urlize }}">{{ . }}</a>
@@ -19,4 +19,4 @@
 	</div>
 </section>
 
-{{ template "chrome/footer.html" }}
+{{ template "theme/partials/footer.html" }}

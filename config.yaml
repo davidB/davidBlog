@@ -3,7 +3,11 @@ contentdir: "content"
 layoutdir: "layouts"
 publishdir: "public"
 builddrafts: false
+canonifyurls: false
 indexes:
    category: "categories"
    tag: "tags"
 baseurl: "http://dwayneb.free.fr/"
+params:
+  AuthorName: "David Bernard"
+  GitHubUser: "davidB"

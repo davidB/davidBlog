@@ -1,10 +1,10 @@
 {{ $baseurl := .Site.BaseUrl }}
-{{ template "chrome/header.html" . }}
+{{ template "theme/partials/header.html" . }}
 <h1>{{.Title}}</h1>
 <div class="publishInfo">
   {{.Date.Format "2006-01-02"}}
 </div>
 <hr>
 {{.Content}}
-{{ template "chrome/comments.html" . }}
-{{ template "chrome/footer.html" . }}
+{{ template "partials/comments.html" . }}
+{{ template "theme/partials/footer.html" . }}
