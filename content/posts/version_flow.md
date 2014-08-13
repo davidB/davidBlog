@@ -3,8 +3,9 @@ title: "My versionning flow"
 description": ""
 date: "2011-05-29"
 categories: ["articles"]
-tags: [ "misc", "lang/dart"]
+tags: [ "misc"]
 ---
+Manual tagging
 
     VERSION_CURRENT=1.1.0
     VERSION_NEXT=1.2.0
@@ -31,4 +32,3 @@ In the specific case of [ScalaIDE](http://scala-ide.org/) I use the following in
       grep -r ${VERSION_CURRENT} ../**/pom.xml
       grep -r ${VERSION_CURRENT} ../**/MANIFEST.MF
       # build and fix any issue related to version modification
-    
