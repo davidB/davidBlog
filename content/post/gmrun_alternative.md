@@ -1,6 +1,6 @@
 ---
 title: "Linux : Gmrun alternatives"
-description": ""
+description: ""
 date: "2010-10-12"
 categories: ["articles"]
 tags: [ "linux" ]

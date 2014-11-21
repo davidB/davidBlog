@@ -1,6 +1,6 @@
 ---
 title: "Lift : integrate ReCaptcha"
-description": ""
+description: ""
 date: "2010-10-08"
 categories: ["articles"]
 tags: [ "lang/scala", "lift" ]

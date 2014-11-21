@@ -1,6 +1,6 @@
 ---
 title: "Java/Scala packages without '.'"
-description": ""
+description: ""
 date: "2010-01-20"
 categories: ["articles"]
 tags: [ "lang/java", "lang/scala", "convention"]

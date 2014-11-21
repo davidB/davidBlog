@@ -1,12 +1,12 @@
 ---
 title: "Make a executable jar"
-description": ""
+description: ""
 date: "2010-09-13"
 categories: ["articles"]
 tags: [ "lang/scala", "lang/java" ]
 draft: true
 ---
-          
+
 
 ## Single jar
 

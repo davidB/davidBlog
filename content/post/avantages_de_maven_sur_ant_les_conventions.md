@@ -1,6 +1,6 @@
 ---
 title: "Avantages de maven sur ant : les conventions"
-description": ""
+description: ""
 date: "2006-12-01"
 categories: ["articles"]
 tags: [ "tools/maven"]

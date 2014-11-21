@@ -1,6 +1,6 @@
 ---
 title: "displayCover"
-description": ""
+description: ""
 date: "2007-08-30"
 categories: ["articles"]
 tags: [ "project"]

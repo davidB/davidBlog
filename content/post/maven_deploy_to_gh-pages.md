@@ -1,12 +1,12 @@
 ---
-title: ""
-description": ""
+title: "Maven deploy to gh-pages"
+description: ""
 date: "2010-10-12"
 categories: ["articles"]
-tags: [ "linux" ]
+tags: [ "maven", "github" ]
 draft: true
 ---
- 
+
 
 prepare a new local working directory to host gh-pages branch
 
@@ -35,4 +35,3 @@ edit project definition (into master) to generate mvnsite into the new directory
         <url>file://${gh-pages-dir}</url>
       </site>
     </distributionManagement>
-
