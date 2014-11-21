@@ -292,6 +292,16 @@ article a:active, article a:hover {
   outline: 0px none;
 }
 
+ul ul, ol ul, ul ol, ol ol {
+    margin-bottom: 0px;
+}
+ul, ol {
+    margin-top: 0px;
+    margin-bottom: 10.5px;
+}
+p {
+  margin: 1em 0 0 0;
+}
 /* ==========================================================================
    Media Queries
    ========================================================================== */
