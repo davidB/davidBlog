@@ -11,3 +11,8 @@ baseurl: "http://dwayneb.free.fr/"
 params:
   AuthorName: "David Bernard"
   GitHubUser: "davidB"
+  Title: "davidB'log"
+  Keywords: "project, tools/maven, misc, lang/xsl, convention, lang/java, lang/scala, tools/eclipse, linux, lang/dart, vdrones, sugar, bookmarks, osgi, tips, tools/tycho, lift, todo"
+  RSSFeed: "http://feeds.feedburner.com/davidB_log"
+  Intensedebate_idcomments_acct: "e3d598aebabbaf4e96c6e81e7e5d84e6"
+  GA_ID: "UA-18659445-2"

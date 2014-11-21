@@ -1,0 +1,17 @@
+{{ partial "header.html" . }}
+
+<header>
+<h1>{{.Title}}</h1>
+</header>
+<hr>
+<section>
+   Listed are the set of tag links related to articles in this site. The number of articles related to a tag succeeds the tag.
+   <ul>
+   {{ $data := .Data }}
+    {{ range $key, $value := .Data.Terms }}
+    <li><a href="{{ $data.Plural }}/{{ $key | urlize }}"> {{ $key }} </a> x {{ len $value }} </li>
+    {{ end }}
+   </ul>
+</section>
+
+{{ partial "footer.html" . }}

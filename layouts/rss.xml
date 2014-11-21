@@ -3,15 +3,15 @@
       <title>{{ .Title }} on {{ .Site.Title }} </title>
     <link>{{ .Permalink }}</link>
     <language>en-us</language>
-    <author>David Bernard</author>
-    <rights>Copyright (c) 2008 - 2013, David Bernard; all rights reserved.</rights>
+    <author>{{ .Site.Params.AuthorName}}</author>
+    <rights>Copyright (c) 2008 - 2015, {{ .Site.Params.AuthorName}}; all rights reserved.</rights>
     <updated>{{ .Date }}</updated>
     {{ range .Data.Pages }}
     <item>
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 MST" }}</pubDate>
-      <author>David Bernard</author>
+      <author>{{ .Site.Params.AuthorName}}</author>
       <guid>{{ .Permalink }}</guid>
       <description>{{ .Content | html }}</description>
     </item>
