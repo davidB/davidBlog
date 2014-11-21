@@ -130,6 +130,7 @@ nav a:hover {
     text-decoration: none;
     color: white;
 }
+
 /* ==============
     MOBILE: Main
    ============== */
@@ -280,8 +281,16 @@ pre {
     white-space: pre-wrap;
 }
 
-
-
+article a {
+  color: #18BC9C;
+  text-decoration: none;
+}
+article a:hover {
+  text-decoration: underline;
+}
+article a:active, article a:hover {
+  outline: 0px none;
+}
 
 /* ==========================================================================
    Media Queries
@@ -369,7 +378,7 @@ pre {
    =============== */
 
     .wrapper {
-        width: 1026px; /* 1140px - 10% for margins */
+        width: 1100px; /* 1026px = 1140px - 10% for margins */
         margin: 0 auto;
     }
 }
