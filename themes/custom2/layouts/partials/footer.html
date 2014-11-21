@@ -28,9 +28,9 @@
   </a>
 </div>
 <div>
-  <h2>Recents post</h2>
+  <h2>Recents posts</h2>
   <ul>
-    {{ range .Site.Recent }}
+    {{ range first 6 .Site.Recent }}
         {{ .Render "li0"}}
     {{ end }}
   </ul>

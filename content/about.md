@@ -1,7 +1,7 @@
 ---
 title: "About the site"
 description": ""
-date: "2013-09-18"
+date: "0013-09-18"
 categories: ["pages"]
 ---
 
