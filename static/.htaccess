@@ -1,0 +1,925 @@
+# Apache Server Configs v2.2.0 | MIT License
+# https://github.com/h5bp/server-configs-apache
+
+# (!) Using `.htaccess` files slows down Apache, therefore, if you have access
+# to the main server config file (usually called `httpd.conf`), you should add
+# this logic there: http://httpd.apache.org/docs/current/howto/htaccess.html.
+
+# ##############################################################################
+# # CROSS-ORIGIN RESOURCE SHARING (CORS)                                       #
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# | Cross-domain AJAX requests                                                 |
+# ------------------------------------------------------------------------------
+
+# Allow cross-origin AJAX requests.
+# http://code.google.com/p/html5security/wiki/CrossOriginRequestSecurity
+# http://enable-cors.org/
+
+# <IfModule mod_headers.c>
+#    Header set Access-Control-Allow-Origin "*"
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | CORS-enabled images                                                        |
+# ------------------------------------------------------------------------------
+
+# Send the CORS header for images when browsers request it.
+# https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image
+# http://blog.chromium.org/2011/07/using-cross-domain-images-in-webgl-and.html
+# http://hacks.mozilla.org/2011/11/using-cors-to-load-webgl-textures-from-cross-domain-images/
+
+#<IfModule mod_setenvif.c>
+#    <IfModule mod_headers.c>
+#        <FilesMatch "\.(cur|gif|ico|jpe?g|png|svgz?|webp)$">
+#            SetEnvIf Origin ":" IS_CORS
+#            Header set Access-Control-Allow-Origin "*" env=IS_CORS
+#        </FilesMatch>
+#    </IfModule>
+#</IfModule>
+
+# ------------------------------------------------------------------------------
+# | Web fonts access                                                           |
+# ------------------------------------------------------------------------------
+
+# Allow access to web fonts from all domains.
+
+#<IfModule mod_headers.c>
+#    <FilesMatch "\.(eot|otf|tt[cf]|woff)$">
+#        Header set Access-Control-Allow-Origin "*"
+#    </FilesMatch>
+#</IfModule>
+
+
+# ##############################################################################
+# # ERRORS                                                                     #
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# | 404 error prevention for non-existing redirected folders                   |
+# ------------------------------------------------------------------------------
+
+# Prevent Apache from returning a 404 error as the result of a rewrite
+# when the directory with the same name does not exist.
+# http://httpd.apache.org/docs/current/content-negotiation.html#multiviews
+# http://www.webmasterworld.com/apache/3808792.htm
+
+Options -MultiViews
+
+# ------------------------------------------------------------------------------
+# | Custom error messages / pages                                              |
+# ------------------------------------------------------------------------------
+
+# Customize what Apache returns to the client in case of an error.
+# http://httpd.apache.org/docs/current/mod/core.html#errordocument
+
+ErrorDocument 404 /404.html
+#ErrorDocument 403 403.html
+#ErrorDocument 500 500.html
+
+# ##############################################################################
+# # INTERNET EXPLORER                                                          #
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# | Better website experience                                                  |
+# ------------------------------------------------------------------------------
+
+# Force Internet Explorer to render pages in the highest available mode
+# in the various cases when it may not.
+# http://hsivonen.iki.fi/doctype/ie-mode.pdf
+
+#<IfModule mod_headers.c>
+#    Header set X-UA-Compatible "IE=edge"
+#    # `mod_headers` cannot match based on the content-type, however, this
+#    # header should be send only for HTML pages and not for the other resources
+#    <FilesMatch "\.(appcache|atom|crx|css|cur|eot|f4[abpv]|flv|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|vcf|vtt|webapp|web[mp]|woff|xml|xpi)$">
+#        Header unset X-UA-Compatible
+#    </FilesMatch>
+#</IfModule>
+
+# ------------------------------------------------------------------------------
+# | Cookie setting from iframes                                                |
+# ------------------------------------------------------------------------------
+
+# Allow cookies to be set from iframes in Internet Explorer.
+# http://msdn.microsoft.com/en-us/library/ms537343.aspx
+# http://www.w3.org/TR/2000/CR-P3P-20001215/
+
+# <IfModule mod_headers.c>
+#   Header set P3P "policyref=\"/w3c/p3p.xml\", CP=\"IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT\""
+# </IfModule>
+
+
+# ##############################################################################
+# # MIME TYPES AND ENCODING                                                    #
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# | Proper MIME types for all files                                            |
+# ------------------------------------------------------------------------------
+
+#<IfModule mod_mime.c>
+
+  # Audio
+    AddType audio/mp4                                   m4a f4a f4b
+    AddType audio/ogg                                   oga ogg opus
+
+  # Data interchange
+    AddType application/json                            json map
+    AddType application/ld+json                         jsonld
+
+  # JavaScript
+    # Normalize to standard type.
+    # http://tools.ietf.org/html/rfc4329#section-7.2
+    AddType application/javascript                      js
+
+  # Video
+    AddType video/mp4                                   f4v f4p m4v mp4
+    AddType video/ogg                                   ogv
+    AddType video/webm                                  webm
+    AddType video/x-flv                                 flv
+
+  # Web fonts
+    AddType application/font-woff                       woff
+    AddType application/vnd.ms-fontobject               eot
+
+    # Browsers usually ignore the font MIME types and simply sniff the bytes
+    # to figure out the font type.
+    # http://mimesniff.spec.whatwg.org/#matching-a-font-type-pattern
+
+    # Chrome however, shows a warning if any other MIME types are used for
+    # the following fonts.
+
+    AddType application/x-font-ttf                      ttc ttf
+    AddType font/opentype                               otf
+
+    # Make SVGZ fonts work on the iPad.
+    # https://twitter.com/FontSquirrel/status/14855840545
+    AddType     image/svg+xml                           svgz
+    AddEncoding gzip                                    svgz
+
+  # Other
+    AddType application/octet-stream                    safariextz
+    AddType application/x-chrome-extension              crx
+    AddType application/x-opera-extension               oex
+    AddType application/x-web-app-manifest+json         webapp
+    AddType application/x-xpinstall                     xpi
+    AddType application/xml                             atom rdf rss xml
+    AddType image/webp                                  webp
+    AddType image/x-icon                                cur
+    AddType text/cache-manifest                         appcache manifest
+    AddType text/vtt                                    vtt
+    AddType text/x-component                            htc
+    AddType text/x-vcard                                vcf
+    AddType text/cache-manifest                         .appcache
+#</IfModule>
+
+# ------------------------------------------------------------------------------
+# | UTF-8 encoding                                                             |
+# ------------------------------------------------------------------------------
+
+# Use UTF-8 encoding for anything served as `text/html` or `text/plain`.
+AddDefaultCharset utf-8
+
+# Force UTF-8 for certain file formats.
+#<IfModule mod_mime.c>
+    AddCharset utf-8 .atom .css .js .json .jsonld .rss .vtt .webapp .xml
+#</IfModule>
+
+
+# ##############################################################################
+# # URL REWRITES                                                               #
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# | Rewrite engine                                                             |
+# ------------------------------------------------------------------------------
+
+# Turn on the rewrite engine and enable the `FollowSymLinks` option (this is
+# necessary in order for the following directives to work).
+
+# If your web host doesn't allow the `FollowSymlinks` option, you may need to
+# comment it out and use `Options +SymLinksIfOwnerMatch`, but be aware of the
+# performance impact.
+# http://httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
+
+# Also, some cloud hosting services require `RewriteBase` to be set.
+# http://www.rackspace.com/knowledge_center/frequently-asked-question/why-is-mod-rewrite-not-working-on-my-site
+
+#<IfModule mod_rewrite.c>
+#    Options +FollowSymlinks
+#  # Options +SymLinksIfOwnerMatch
+#    RewriteEngine On
+#  # RewriteBase /
+#</IfModule>
+
+# ------------------------------------------------------------------------------
+# | Suppressing / Forcing the `www.` at the beginning of URLs                  |
+# ------------------------------------------------------------------------------
+
+# The same content should never be available under two different URLs,
+# especially not with and without `www.` at the beginning. This can cause
+# SEO problems (duplicate content), and therefore, you should choose one
+# of the alternatives and redirect the other one.
+
+# By default `Option 1` (no `www.`) is activated.
+# http://no-www.org/faq.php?q=class_b
+
+# If you would prefer to use `Option 2`, just comment out all the lines
+# from `Option 1` and uncomment the ones from `Option 2`.
+
+# IMPORTANT: NEVER USE BOTH RULES AT THE SAME TIME!
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Option 1: rewrite www.example.com → example.com
+
+#<IfModule mod_rewrite.c>
+#    RewriteCond %{HTTPS} !=on
+#    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+#    RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+#</IfModule>
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Option 2: rewrite example.com → www.example.com
+
+# Be aware that the following might not be a good idea if you use "real"
+# subdomains for certain parts of your website.
+
+# <IfModule mod_rewrite.c>
+#    RewriteCond %{HTTPS} !=on
+#    RewriteCond %{HTTP_HOST} !^www\. [NC]
+#    RewriteCond %{SERVER_ADDR} !=127.0.0.1
+#    RewriteCond %{SERVER_ADDR} !=::1
+#    RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# </IfModule>
+
+
+# ##############################################################################
+# # SECURITY                                                                   #
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# | Clickjacking                                                               |
+# ------------------------------------------------------------------------------
+
+# Protect website against clickjacking.
+
+# The example below sends the `X-Frame-Options` response header with the value
+# `DENY`, informing browsers not to display the web page content in any frame.
+
+# This might not be the best setting for everyone. You should read about the
+# other two possible values for `X-Frame-Options`: `SAMEORIGIN` & `ALLOW-FROM`.
+# http://tools.ietf.org/html/rfc7034#section-2.1
+
+# Keep in mind that while you could send the `X-Frame-Options` header for all
+# of your site’s pages, this has the potential downside that it forbids even
+# non-malicious framing of your content (e.g.: when users visit your site using
+# a Google Image Search results page).
+
+# Nonetheless, you should ensure that you send the `X-Frame-Options` header for
+# all pages that allow a user to make a state changing operation (e.g: pages
+# that contain one-click purchase links, checkout or bank-transfer confirmation
+# pages, pages that make permanent configuration changes, etc.).
+
+# Sending the `X-Frame-Options` header can also protect your website against
+# more than just clickjacking attacks: https://cure53.de/xfo-clickjacking.pdf.
+
+# http://tools.ietf.org/html/rfc7034
+# http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx
+# https://www.owasp.org/index.php/Clickjacking
+
+# <IfModule mod_headers.c>
+#     Header set X-Frame-Options "DENY"
+#     <FilesMatch "\.(appcache|atom|crx|css|cur|eot|f4[abpv]|flv|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|vcf|vtt|webapp|web[mp]|woff|xml|xpi)$">
+#         Header unset X-Frame-Options
+#     </FilesMatch>
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | Content Security Policy (CSP)                                              |
+# ------------------------------------------------------------------------------
+
+# Mitigate the risk of cross-site scripting and other content-injection attacks.
+
+# This can be done by setting a `Content Security Policy` which whitelists
+# trusted sources of content for your website.
+
+# The example header below allows ONLY scripts that are loaded from the current
+# site's origin (no inline scripts, no CDN, etc). This almost certainly won't
+# work as-is for your site!
+
+# For more details on how to craft a reasonable policy for your site, read:
+# http://html5rocks.com/en/tutorials/security/content-security-policy (or the
+# specification: http://w3.org/TR/CSP). Also, to make things easier, you can
+# use an online CSP header generator such as: http://cspisawesome.com/.
+
+# <IfModule mod_headers.c>
+#     Header set Content-Security-Policy "script-src 'self'; object-src 'self'"
+#     <FilesMatch "\.(appcache|atom|crx|css|cur|eot|f4[abpv]|flv|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|vcf|vtt|webapp|web[mp]|woff|xml|xpi)$">
+#         Header unset Content-Security-Policy
+#     </FilesMatch>
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | File access                                                                |
+# ------------------------------------------------------------------------------
+
+# Block access to directories without a default document.
+# You should leave the following uncommented, as you shouldn't allow anyone to
+# surf through every directory on your server (which may includes rather private
+# places such as the CMS's directories).
+
+#<IfModule mod_autoindex.c>
+    Options -Indexes
+#</IfModule>
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Block access to hidden files and directories.
+# This includes directories used by version control systems such as Git and SVN.
+
+#<IfModule mod_rewrite.c>
+#    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+#    RewriteCond %{SCRIPT_FILENAME} -f
+#    RewriteRule "(^|/)\." - [F]
+#</IfModule>
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Block access to files that can expose sensitive information.
+
+# By default, block access to backup and source files that may be left by some
+# text editors and can pose a security risk when anyone has access to them.
+# http://feross.org/cmsploit/
+
+# IMPORTANT: Update the `<FilesMatch>` regular expression from below to include
+# any files that might end up on your production server and can expose sensitive
+# information about your website. These files may include: configuration files,
+# files that contain metadata about the project (e.g.: project dependencies),
+# build scripts, etc..
+
+#<FilesMatch "(^#.*#|\.(bak|config|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
+#
+#    # Apache < 2.3
+#    <IfModule !mod_authz_core.c>
+#        Order allow,deny
+#        Deny from all
+#        Satisfy All
+#    </IfModule>
+#
+#    # Apache ≥ 2.3
+#    <IfModule mod_authz_core.c>
+#        Require all denied
+#    </IfModule>
+#
+#</FilesMatch>
+
+# ------------------------------------------------------------------------------
+# | Reducing MIME type security risks                                          |
+# ------------------------------------------------------------------------------
+
+# Prevent some browsers from MIME-sniffing the response.
+
+# This reduces exposure to drive-by download attacks and cross-origin data
+# leaks, and should be left uncommented, especially if the web server is
+# serving user-uploaded content or content that could potentially be treated
+# as executable by the browser.
+
+# http://www.slideshare.net/hasegawayosuke/owasp-hasegawa
+# http://blogs.msdn.com/b/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
+# http://msdn.microsoft.com/en-us/library/ie/gg622941.aspx
+# http://mimesniff.spec.whatwg.org/
+
+#<IfModule mod_headers.c>
+#   Header set X-Content-Type-Options "nosniff"
+#</IfModule>
+
+# ------------------------------------------------------------------------------
+# | Reflected Cross-Site Scripting (XSS) attacks                               |
+# ------------------------------------------------------------------------------
+
+# (1) Try to re-enable the Cross-Site Scripting (XSS) filter built into the
+#     most recent web browsers.
+#
+#     The filter is usually enabled by default, but in some cases it may be
+#     disabled by the user. However, in Internet Explorer for example, it can
+#     be re-enabled just by sending the `X-XSS-Protection` header with the
+#     value of `1`.
+#
+# (2) Prevent web browsers from rendering the web page if a potential reflected
+#     (a.k.a non-persistent) XSS attack is detected by the filter.
+#
+#     By default, if the filter is enabled and browsers detect a reflected
+#     XSS attack, they will attempt to block the attack by making the smallest
+#     possible modifications to the returned web page.
+#
+#     Unfortunately, in some browsers (e.g.: Internet Explorer), this default
+#     behavior may allow the XSS filter to be exploited, thereby, it's better
+#     to tell browsers to prevent the rendering of the page altogether, instead
+#     of attempting to modify it.
+#
+#     http://hackademix.net/2009/11/21/ies-xss-filter-creates-xss-vulnerabilities
+#
+# IMPORTANT: Do not rely on the XSS filter to prevent XSS attacks! Ensure that
+# you are taking all possible measures to prevent XSS attacks, the most obvious
+# being: validating and sanitizing your site's inputs.
+#
+# http://blogs.msdn.com/b/ie/archive/2008/07/02/ie8-security-part-iv-the-xss-filter.aspx
+# http://blogs.msdn.com/b/ieinternals/archive/2011/01/31/controlling-the-internet-explorer-xss-filter-with-the-x-xss-protection-http-header.aspx
+# https://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29
+
+# <IfModule mod_headers.c>
+#     #                           (1)    (2)
+#     Header set X-XSS-Protection "1; mode=block"
+#     <FilesMatch "\.(appcache|atom|crx|css|cur|eot|f4[abpv]|flv|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|vcf|vtt|webapp|web[mp]|woff|xml|xpi)$">
+#         Header unset X-XSS-Protection
+#     </FilesMatch>
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | Secure Sockets Layer (SSL)                                                 |
+# ------------------------------------------------------------------------------
+
+# Rewrite secure requests properly in order to prevent SSL certificate warnings.
+# E.g.: prevent `https://www.example.com` when your certificate only allows
+# `https://secure.example.com`.
+
+# <IfModule mod_rewrite.c>
+#    RewriteCond %{SERVER_PORT} !^443
+#    RewriteRule ^ https://example-domain-please-change-me.com%{REQUEST_URI} [R=301,L]
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | HTTP Strict Transport Security (HSTS)                                      |
+# ------------------------------------------------------------------------------
+
+# Force client-side SSL redirection.
+
+# If a user types `example.com` in his browser, the above rule will redirect
+# him to the secure version of the site. That still leaves a window of
+# opportunity (the initial HTTP connection) for an attacker to downgrade or
+# redirect the request.
+
+# The following header ensures that browser will ONLY connect to your server
+# via HTTPS, regardless of what the users type in the address bar.
+
+# http://tools.ietf.org/html/draft-ietf-websec-strict-transport-sec-14#section-6.1
+# http://www.html5rocks.com/en/tutorials/security/transport-layer-security/
+
+# IMPORTANT: Remove the `includeSubDomains` optional directive if the subdomains
+# are not using HTTPS.
+
+# <IfModule mod_headers.c>
+#    Header set Strict-Transport-Security "max-age=16070400; includeSubDomains"
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | Server software information                                                |
+# ------------------------------------------------------------------------------
+
+# Avoid displaying the exact Apache version number, the description of the
+# generic OS-type and the information about Apache's compiled-in modules.
+
+# ADD THIS DIRECTIVE IN THE `httpd.conf` AS IT WILL NOT WORK IN THE `.htaccess`!
+
+# ServerTokens Prod
+
+
+# ##############################################################################
+# # WEB PERFORMANCE                                                            #
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# | Compression                                                                |
+# ------------------------------------------------------------------------------
+
+#<IfModule mod_deflate.c>
+#
+#    # Force compression for mangled headers.
+#    # http://developer.yahoo.com/blogs/ydn/posts/2010/12/pushing-beyond-gzipping
+#    <IfModule mod_setenvif.c>
+#        <IfModule mod_headers.c>
+#            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+#            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+#        </IfModule>
+#    </IfModule>
+#
+#    # Compress all output labeled with one of the following MIME-types
+#    # (for Apache versions below 2.3.7, you don't need to enable `mod_filter`
+#    #  and can remove the `<IfModule mod_filter.c>` and `</IfModule>` lines
+#    #  as `AddOutputFilterByType` is still in the core directives).
+#    <IfModule mod_filter.c>
+#        AddOutputFilterByType DEFLATE application/atom+xml \
+#                                      application/javascript \
+#                                      application/json \
+#                                      application/ld+json \
+#                                      application/rss+xml \
+#                                      application/vnd.ms-fontobject \
+#                                      application/x-font-ttf \
+#                                      application/x-web-app-manifest+json \
+#                                      application/xhtml+xml \
+#                                      application/xml \
+#                                      font/opentype \
+#                                      image/svg+xml \
+#                                      image/x-icon \
+#                                      text/css \
+#                                      text/html \
+#                                      text/plain \
+#                                      text/x-component \
+#                                      text/xml
+#    </IfModule>
+#
+#</IfModule>
+
+# ------------------------------------------------------------------------------
+# | Content transformations                                                    |
+# ------------------------------------------------------------------------------
+
+# Prevent mobile network providers from modifying the website's content.
+# http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.5.
+
+# <IfModule mod_headers.c>
+#    Header set Cache-Control "no-transform"
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | ETags                                                                      |
+# ------------------------------------------------------------------------------
+
+# Remove `ETags` as resources are sent with far-future expires headers.
+# http://developer.yahoo.com/performance/rules.html#etags.
+
+# `FileETag None` doesn't work in all cases.
+#<IfModule mod_headers.c>
+#    Header unset ETag
+#</IfModule>
+#
+#FileETag None
+
+# ------------------------------------------------------------------------------
+# | Expires headers                                                            |
+# ------------------------------------------------------------------------------
+
+# The following expires headers are set pretty far in the future. If you
+# don't control versioning with filename-based cache busting, consider
+# lowering the cache time for resources such as style sheets and JavaScript
+# files to something like one week.
+
+#<IfModule mod_expires.c>
+#
+#    ExpiresActive on
+#    ExpiresDefault                                      "access plus 1 month"
+#
+#  # CSS
+#    ExpiresByType text/css                              "access plus 1 year"
+#
+#  # Data interchange
+#    ExpiresByType application/json                      "access plus 0 seconds"
+#    ExpiresByType application/ld+json                   "access plus 0 seconds"
+#    ExpiresByType application/xml                       "access plus 0 seconds"
+#    ExpiresByType text/xml                              "access plus 0 seconds"
+#
+#  # Favicon (cannot be renamed!) and cursor images
+#    ExpiresByType image/x-icon                          "access plus 1 week"
+#
+#  # HTML components (HTCs)
+#    ExpiresByType text/x-component                      "access plus 1 month"
+#
+#  # HTML
+#    ExpiresByType text/html                             "access plus 0 seconds"
+#
+#  # JavaScript
+#    ExpiresByType application/javascript                "access plus 1 year"
+#
+#  # Manifest files
+#    ExpiresByType application/x-web-app-manifest+json   "access plus 0 seconds"
+#    ExpiresByType text/cache-manifest                   "access plus 0 seconds"
+#
+#  # Media
+#    ExpiresByType audio/ogg                             "access plus 1 month"
+#    ExpiresByType image/gif                             "access plus 1 month"
+#    ExpiresByType image/jpeg                            "access plus 1 month"
+#    ExpiresByType image/png                             "access plus 1 month"
+#    ExpiresByType video/mp4                             "access plus 1 month"
+#    ExpiresByType video/ogg                             "access plus 1 month"
+#    ExpiresByType video/webm                            "access plus 1 month"
+#
+#  # Web feeds
+#    ExpiresByType application/atom+xml                  "access plus 1 hour"
+#    ExpiresByType application/rss+xml                   "access plus 1 hour"
+#
+#  # Web fonts
+#    ExpiresByType application/font-woff                 "access plus 1 month"
+#    ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
+#    ExpiresByType application/x-font-ttf                "access plus 1 month"
+#    ExpiresByType font/opentype                         "access plus 1 month"
+#    ExpiresByType image/svg+xml                         "access plus 1 month"
+#
+#</IfModule>
+
+# ------------------------------------------------------------------------------
+# | Filename-based cache busting                                               |
+# ------------------------------------------------------------------------------
+
+# If you're not using a build process to manage your filename version revving,
+# you might want to consider enabling the following directives to route all
+# requests such as `/css/style.12345.css` to `/css/style.css`.
+
+# To understand why this is important and a better idea than `*.css?v231`, read:
+# http://stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring
+
+# <IfModule mod_rewrite.c>
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteRule ^(.+)\.(\d+)\.(js|css|png|jpe?g|gif)$ $1.$3 [L]
+# </IfModule>
+
+# ------------------------------------------------------------------------------
+# | File concatenation                                                         |
+# ------------------------------------------------------------------------------
+
+# Allow concatenation from within specific style sheets and JavaScript files.
+
+# e.g.:
+#
+#   If you have the following content in a file
+#
+#       <!--#include file="libs/jquery.js" -->
+#       <!--#include file="plugins/jquery.timer.js" -->
+#
+#   Apache will replace it with the content from the specified files.
+
+# <IfModule mod_include.c>
+#    <FilesMatch "\.combined\.js$">
+#        Options +Includes
+#        AddOutputFilterByType INCLUDES application/javascript application/json
+#        SetOutputFilter INCLUDES
+#    </FilesMatch>
+#    <FilesMatch "\.combined\.css$">
+#        Options +Includes
+#        AddOutputFilterByType INCLUDES text/css
+#        SetOutputFilter INCLUDES
+#    </FilesMatch>
+# </IfModule>
+
+# -------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------
+
+# Compress text files.
+# <IfModule mod_deflate.c>
+# SetOutputFilter DEFLATE
+# # compress content with type html, text, js, and css
+# AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/x-javascript
+# <IfModule mod_headers.c>
+# # properly handle requests coming from behind proxies
+# Header append Vary User-Agent
+# </IfModule>
+# # Properly handle old browsers that do not support compression
+# BrowserMatch ^Mozilla/4 gzip-only-text/html
+# BrowserMatch ^Mozilla/4\.0[678] no-gzip
+# BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+# # Explicitly exclude binary files from compression just in case
+# SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|pdf|swf|ico|zip)$ no-gzip
+# </IfModule>
+
+# Set the default handler.
+# DirectoryIndex index.html # failed on xxxx.free.fr
+
+# # Requires mod_expires to be enabled.
+# <IfModule mod_expires.c>
+# # Enable expirations.
+# ExpiresActive On
+# 
+# #ExpiresDefault A14400
+# #ExpiresByType application/javascript A2592000
+# #ExpiresByType application/x-javascript A2592000
+# #ExpiresByType text/javascript A2592000
+# #ExpiresByType text/html A3600
+# #ExpiresByType text/xml A3600
+# #ExpiresByType text/css A2592000
+# #ExpiresByType text/plain A2592000
+# ExpiresByType image/gif A2592000
+# ExpiresByType image/jpg A2592000
+# ExpiresByType image/jpeg A2592000
+# ExpiresByType image/png A2592000
+# ExpiresByType image/bmp A2592000
+# ExpiresByType application/x-shockwave-flash A2592000
+# </IfModule>
+                 
+# Rewrite rules.
+
+Redirect Permanent /blog/rss.php http://feeds.feedburner.com/davidB_log
+Redirect Permanent /blog/atom.php http://feeds.feedburner.com/davidB_log
+#<IfModule mod_rewrite.c>
+#RewriteEngine on
+#RewriteRule ^$ /home/index.html [L]
+#RewriteRule ^(rss|atom)/?$ /$1.xml [L]
+#RewriteRule ^/blog/rss.php$ http://feeds.feedburner.com/davidB_log
+#RewriteRule ^/blog/atom.php$ http://feeds.feedburner.com/davidB_log
+##RewriteRule ^tags/([^/\.]+)/(rss|atom)/?$ /tags/$1/$2.xml [L]
+#
+#RewriteRule /blog/index.php/2006/06/15/2-use-compact-syntax /posts/use_compact_syntax/
+#RewriteRule /blog/index.php/2006/06/19/3-testng-gui-01 /posts/testng-gui_01/
+#RewriteRule /blog/index.php/2006/09/19/4-why-i-don-t-continue-to-use-getter-and-setter /posts/why_i_don_t_continue_to_use_getter_and_setter/
+#RewriteRule /blog/index.php/2006/12/01/5-avantages-de-maven-sur-ant-les-conventions /posts/avantages_de_maven_sur_ant_les_conventions/
+#RewriteRule /blog/index.php/2006/12/01/6-avantages-de-maven-sur-ant-les-librairies /posts/avantages_de_maven_sur_ant_les_librairies/
+#RewriteRule /blog/index.php/2006/12/01/7-les-drm-nous-avons-ete-trop-gentil-avec-les-mechants /posts/les_drm_nous_avons_ete_trop_gentil_avec_les_mechants/
+#RewriteRule /blog/index.php/2006/12/01/8-tips-inclure-un-jar-dans-un-projet-maven /posts/tips_inclure_un_jar_dans_un_projet_maven/
+#RewriteRule /blog/index.php/2006/12/01/9-tips-rechercher-un-jar /posts/tips-rechercher-un-jar/
+#RewriteRule /blog/index.php/2006/12/07/10-url-info-maven-2 /posts/url-info-maven-2/
+#RewriteRule /blog/index.php/2006/12/07/11-url-repositories-maven2 /posts/url_repositories_maven2/
+#RewriteRule /blog/index.php/2007/08/30/12-displaycover /posts/displaycover/
+#RewriteRule ^(blog|entries)/([^/\.]+)/?$ /posts/$2/ [L,R=301]
+#RewriteRule /blog/ /articles/
+#RewriteRule ^(articles|blog|entries|tags)/?$ /archives/ [L,R=301]
+#</IfModule>
+# 
+# RedirectMatch permanent /blog/index.php/gallery/babies.* http://dwayneb.free.fr/albums/babies
+
+#<LocationMatch "babies">
+#  AuthName "Veuillez vous identifier"
+#  AuthType Basic
+#  PerlSetVar AuthFile .secret/.htpasswd
+#  #AuthUserFile /mnt/108/sdb/b/f/dwayneb/.secret/.htpasswd
+#  Require user ryowen
+#</LocationMatch>
+
+# This configuration fragment allows you to use the file-type icons with
+# Apache's "autoindex" feature.  You will need to adjust the directory
+# paths to suit your configuration.
+
+# # Use fancy indexing with icons of size 32x32
+# IndexOptions FancyIndexing +FoldersFirst +NameWidth=*
+# IndexOptions +IconWidth=32 +IconHeight=32 +IconsAreLinks
+# IndexOptions -SuppressLastModified +SuppressDescription
+# 
+# IndexOrderDefault Ascending Name
+# IndexIgnore .htaccess Thumbs.db
+# 
+# HeaderName /.indexoverride/HEADER.html
+# ReadmeName /.indexoverride/FOOTER.html
+# 
+# # Associate filename extensions with icons
+# AddIcon /.indexoverride/mimetypes/application-msword.png .doc .dot
+# AddIcon /.indexoverride/mimetypes/application-ogg.png .ogg
+# AddIcon /.indexoverride/mimetypes/application-pdf.png .pdf
+# AddIcon /.indexoverride/mimetypes/application-postscript.png .ai .eps .ps
+# AddIcon /.indexoverride/mimetypes/application-qif.png .qif
+# AddIcon /.indexoverride/mimetypes/application-rtf.png .rtf
+# AddIcon /.indexoverride/mimetypes/application-vnd.ms-excel.png .xlb .xls .xlt .xlw
+# AddIcon /.indexoverride/mimetypes/application-vnd.ms-powerpoint.png .pot .pps .ppt
+# AddIcon /.indexoverride/mimetypes/application-vnd.stardivision.writer.png .sxw
+# AddIcon /.indexoverride/mimetypes/application-x-arj.png .arj
+# AddIcon /.indexoverride/mimetypes/application-x-cpio-compressed.png .bcpio
+# AddIcon /.indexoverride/mimetypes/application-x-cpio.png .cpio
+# AddIcon /.indexoverride/mimetypes/application-x-backup.png *~ .bak
+# AddIcon /.indexoverride/mimetypes/application-x-bittorent.png .torrent
+# AddIcon /.indexoverride/mimetypes/application-x-bzip-compressed-tar.png .tbz .tbz2 .tar.bz .tar.bz2 .tar.bzip
+# AddIcon /.indexoverride/mimetypes/application-x-bzip.png .bz .bz2 .bzip
+# AddIcon /.indexoverride/mimetypes/application-x-cd-image.png .iso
+# AddIcon /.indexoverride/mimetypes/application-x-compress.png .z .Z
+# AddIcon /.indexoverride/mimetypes/application-x-compressed-tar.png .tar
+# AddIcon /.indexoverride/mimetypes/application-x-core-file.png core CORE
+# AddIcon /.indexoverride/mimetypes/application-x-deb.png .deb
+# AddIcon /.indexoverride/mimetypes/application-x-dvi.png .dvi
+# AddIcon /.indexoverride/mimetypes/application-x-font-afm.png .afm
+# AddIcon /.indexoverride/mimetypes/application-x-font-bdf.png .bdf
+# AddIcon /.indexoverride/mimetypes/application-x-font-linux-psf.png .psf
+# AddIcon /.indexoverride/mimetypes/application-x-font-pcf.png .pcf
+# AddIcon /.indexoverride/mimetypes/application-x-font-ttf.png .ttf
+# AddIcon /.indexoverride/mimetypes/application-x-gnumeric.png .gnumeric
+# AddIcon /.indexoverride/mimetypes/application-x-gzip.png .gz .gzip .tar.gz .tgz
+# AddIcon /.indexoverride/mimetypes/application-x-jar.png .jar
+# AddIcon /.indexoverride/mimetypes/application-x-java-byte-code.png .class
+# AddIcon /.indexoverride/mimetypes/application-x-lha.png .lha
+# AddIcon /.indexoverride/mimetypes/application-x-lhz.png .lhz
+# AddIcon /.indexoverride/mimetypes/application-x-object-file.png .o
+# AddIcon /.indexoverride/mimetypes/application-x-ogg.png .ogg
+# AddIcon /.indexoverride/mimetypes/application-x-perl.png .pl
+# AddIcon /.indexoverride/mimetypes/application-x-php.png .php .php3 .php3p .php4 .php5 .pht .phtml
+# AddIcon /.indexoverride/mimetypes/application-x-phyton.png .py
+# AddIcon /.indexoverride/mimetypes/application-x-python-bytecode.png .pyc
+# AddIcon /.indexoverride/mimetypes/application-x-rar.png .rar
+# AddIcon /.indexoverride/mimetypes/application-x-rpm.png .rpm
+# AddIcon /.indexoverride/mimetypes/application-x-sharedlib.png .so .dll
+# AddIcon /.indexoverride/mimetypes/application-x-shellscript.png .bsh .ksh .sh
+# AddIcon /.indexoverride/mimetypes/application-x-shockwave-flash.png .swf
+# AddIcon /.indexoverride/mimetypes/application-x-stuffit.png .sit
+# AddIcon /.indexoverride/mimetypes/application-zip.png .zip
+# AddIcon /.indexoverride/mimetypes/audio-ac3.png .ac3
+# AddIcon /.indexoverride/mimetypes/audio-aiff.png .aif .aifc .aiff
+# AddIcon /.indexoverride/mimetypes/audio-basic.png .au .snd
+# AddIcon /.indexoverride/mimetypes/audio-midi.png .mid .midi
+# AddIcon /.indexoverride/mimetypes/audio-x-mp3.png .mp3
+# AddIcon /.indexoverride/mimetypes/audio-x-pn-realaudio.png .real
+# AddIcon /.indexoverride/mimetypes/audio-x-wav.png .wav
+# AddIcon /.indexoverride/mimetypes/audio-x-xxm.png .xxm
+# AddIcon /.indexoverride/mimetypes/image-bmp.png .bmp
+# AddIcon /.indexoverride/mimetypes/image-jpeg.png .jpeg .jpg
+# AddIcon /.indexoverride/mimetypes/image-png.png .png
+# AddIcon /.indexoverride/mimetypes/image-svg.png .svg
+# AddIcon /.indexoverride/mimetypes/image-tiff.png .tif .tiff
+# AddIcon /.indexoverride/mimetypes/image-x-3ds.png .3ds
+# AddIcon /.indexoverride/mimetypes/image-x-cmu-raster.png .cmu
+# AddIcon /.indexoverride/mimetypes/image-x-portable-anymap.png .pnm
+# AddIcon /.indexoverride/mimetypes/image-x-portable-bitmap.png .pbm
+# AddIcon /.indexoverride/mimetypes/image-x-portable-graymap.png .pgm
+# AddIcon /.indexoverride/mimetypes/image-x-portable-pixmap.png .ppm
+# AddIcon /.indexoverride/mimetypes/image-x-psd.png image/x-psd .psd
+# AddIcon /.indexoverride/mimetypes/image-x-rgb.png image/x-rgb .rgb
+# AddIcon /.indexoverride/mimetypes/image-x-tga.png image/x-tga .tga
+# AddIcon /.indexoverride/mimetypes/image-x-xbitmap.png .xbm
+# AddIcon /.indexoverride/mimetypes/image-x-xcf.png .xcf
+# AddIcon /.indexoverride/mimetypes/image-x-xfig.png .xfig
+# AddIcon /.indexoverride/mimetypes/image-x-xpixmap.png .xpm
+# AddIcon /.indexoverride/mimetypes/text-css.png .css
+# AddIcon /.indexoverride/mimetypes/text-html.png .htm .html .shtml .xhtml
+# AddIcon /.indexoverride/mimetypes/text-x-authors.png authors authors.txt AUTHORS AUTHORS.txt
+# AddIcon /.indexoverride/mimetypes/text-x-c-header.png .h
+# AddIcon /.indexoverride/mimetypes/text-x-copying.png COPYING COPYING.txt
+# AddIcon /.indexoverride/mimetypes/text-x-c.png .c
+# AddIcon /.indexoverride/mimetypes/text-x-c++.png .c++ .cpp
+# AddIcon /.indexoverride/mimetypes/text-x-credits.png credits credits.txt CREDITS CREDITS.txt
+# AddIcon /.indexoverride/mimetypes/text-x-install.png install install.txt INSTALL INSTALL.txt
+# AddIcon /.indexoverride/mimetypes/text-x-lyx.png .lyx
+# AddIcon /.indexoverride/mimetypes/text-xml.png .xml .xsl
+# AddIcon /.indexoverride/mimetypes/text-x-readme.png readme readme.txt README README.txt
+# AddIcon /.indexoverride/mimetypes/text-x-troff-man.png .man
+# AddIcon /.indexoverride/mimetypes/video-mpeg.png .mpeg .mpg .mpe
+# AddIcon /.indexoverride/mimetypes/video-quicktime.png .qt .mov
+# AddIcon /.indexoverride/mimetypes/video-x-ms-asf.png .asf
+# AddIcon /.indexoverride/mimetypes/video-x-msvideo.png .avi
+# AddIcon /.indexoverride/mimetypes/x-ms-wmv.png .wmv
+
+#AddIcon /.indexoverride/mimetypes/application-pgp-encrypted.png application/pgp-encrypted
+#AddIcon /.indexoverride/mimetypes/application-pgp-keys.png application/pgp-keys
+#AddIcon /.indexoverride/mimetypes/application-pgp.png application/pgp
+#AddIcon /.indexoverride/mimetypes/application-rhythmbox-effect.png application/rhythmbox-effect
+#AddIcon /.indexoverride/mimetypes/application-rhythmbox-playlist.png application/rhythmbox-playlist
+#AddIcon /.indexoverride/mimetypes/application-vnd.lotus-1-2-3.png application/vnd.lotus-1-2-3
+#AddIcon /.indexoverride/mimetypes/application-vnd.n-realmedia.png application/vnd.n-realmedia
+#AddIcon /.indexoverride/mimetypes/application-vnd.sun.xml.calc.png application/vnd.sun.xml.calc
+#AddIcon /.indexoverride/mimetypes/application-vnd.sun.xml.stardivision.impress.png application/vnd.sun.xml.stardivision.impress
+#AddIcon /.indexoverride/mimetypes/application-vnd.sun.xml.writer.png application/vnd.sun.xml.writer
+#AddIcon /.indexoverride/mimetypes/application-x-abiword.png application/x-abiword
+#AddIcon /.indexoverride/mimetypes/application-x-applix-spreadsheet.png application/x-applix-spreadsheet
+#AddIcon /.indexoverride/mimetypes/application-x-applix-word.png application/x-applix-word
+#AddIcon /.indexoverride/mimetypes/application-x-archive.png application/x-archive
+#AddIcon /.indexoverride/mimetypes/application-x-blender.png application/x-blender
+#AddIcon /.indexoverride/mimetypes/application-x-core.png application/x-core
+#AddIcon /.indexoverride/mimetypes/application-x-dc-rom.png application/x-dc-rom
+#AddIcon /.indexoverride/mimetypes/application-x-desktop.png application/x-desktop
+#AddIcon /.indexoverride/mimetypes/application-x-diagram.png application/x-diagram
+#AddIcon /.indexoverride/mimetypes/application-x-e-theme.png application/x-e-theme
+#AddIcon /.indexoverride/mimetypes/application-x-executable.png application/x-executable
+#AddIcon /.indexoverride/mimetypes/application-x-font-sunos-news.png application/x-font-sunos-news
+#AddIcon /.indexoverride/mimetypes/application-x-gameboy-rom.png application/x-gameboy-rom
+#AddIcon /.indexoverride/mimetypes/application-x-genesis-rom.png application/x-genesis-rom
+#AddIcon /.indexoverride/mimetypes/application-x-glade.png application/x-glade
+#AddIcon /.indexoverride/mimetypes/application-x-gnome-app-info.png application/x-gnome-app-info
+#AddIcon /.indexoverride/mimetypes/application-x-gnucash.png application/x-gnucash
+#AddIcon /.indexoverride/mimetypes/application-x-gtkalog.png application/x-gtkalog
+#AddIcon /.indexoverride/mimetypes/application-x-class-file.png application/x-class-file
+#AddIcon /.indexoverride/mimetypes/application-x-kde-app-info.png application/x-kde-app-info
+#AddIcon /.indexoverride/mimetypes/application-x-killustrator.png application/x-killustrator
+#AddIcon /.indexoverride/mimetypes/application-x-kpreseter.png application/x-kpreseter
+#AddIcon /.indexoverride/mimetypes/application-x-kspread.png application/x-kspread
+#AddIcon /.indexoverride/mimetypes/application-x-kword.png application/x-kword
+#AddIcon /.indexoverride/mimetypes/application-x-mrproject.png application/x-mrproject
+#AddIcon /.indexoverride/mimetypes/application-x-qw.png application/x-qw
+#AddIcon /.indexoverride/mimetypes/application-x-theme.png application/x-theme
+#AddIcon /.indexoverride/mimetypes/application-x-trash.png application/x-trash
+#AddIcon /.indexoverride/mimetypes/image-x-applix-graphic.png image/x-applix-graphic
+#AddIcon /.indexoverride/mimetypes/image-x-lwo.png image/x-lwo
+#AddIcon /.indexoverride/mimetypes/image-x-lws.png image/x-lws
+#AddIcon /.indexoverride/mimetypes/text-x-chdr.png text/x-chdr
+#AddIcon /.indexoverride/mimetypes/text-x-c++src.png text/x-c++src
+#AddIcon /.indexoverride/mimetypes/text-x-sh.png .sh
+#AddIcon /.indexoverride/mimetypes/image-x-xwindowdump.png .man
+
+# AddIcon (PAR,/.indexoverride/actions/up.png) ..
+# AddIcon (DIR,/.indexoverride/filesystems/directory.png) ^^DIRECTORY^^
+# 
+# # Associate file types with icons (for Apache 2.0)
+# AddIconByType (APP,/.indexoverride/mimetypes/application.png) application/*
+# AddIconByType (SND,/.indexoverride/mimetypes/audio.png) audio/*
+# AddIconByType (CMP,/.indexoverride/mimetypes/compressed.png) compressed/*
+# AddIconByType (IMG,/.indexoverride/mimetypes/image.png) image/*
+# AddIconByType (TXT,/.indexoverride/mimetypes/text.png) text/* message/*
+# AddIconByType (VID,/.indexoverride/mimetypes/video.png) video/*
+
+
+# Associate encoding with icon (for Apache 2.0)
+#AddIconByEncoding /.indexoverride/mimetypes/compressed.png     x-compress x-gzip
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-nfs-server.png x-directory-nfs-server
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-smb-server.png x-directory-smb-server
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-smb-share.png x-directory-smb-share
+#AddIconByEncoding /.indexoverride/mimetypes/x-directory-smb-workgroup.png x-directory-smb-workgroup
+
+# Default icon for otherwise-unassociated filetypes
+# DefaultIcon /.indexoverride/filesystems/default.png
+
+
