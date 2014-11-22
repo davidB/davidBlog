@@ -114,7 +114,8 @@ nav a {
     font-weight: bold;
 
     color: white;
-    background: #1F2C39;
+    /*background: #1F2C39;*/
+    background: #45627F;
 }
 
 nav a:hover,
@@ -124,6 +125,7 @@ nav a:visited {
 
 nav a:hover {
     text-decoration: none;
+    background: #3E5873;
 }
 
 .title a {
@@ -280,7 +282,22 @@ code, pre {
 pre {
     white-space: pre-wrap;
 }
-
+code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #C7254E;
+    white-space: nowrap;
+    background-color: #F9F2F4;
+    border-radius: 4px;
+}
+pre code {
+    padding: 0px;
+    font-size: inherit;
+    color: inherit;
+    white-space: pre-wrap;
+    background-color: transparent;
+    border: 0px none;
+}
 article a {
   color: #18BC9C;
   text-decoration: none;
